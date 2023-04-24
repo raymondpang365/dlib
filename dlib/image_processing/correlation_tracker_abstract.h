@@ -4,6 +4,7 @@
 #ifdef DLIB_CORRELATION_TrACKER_ABSTRACT_H_
 
 #include "../geometry/drectangle_abstract.h"
+#include "../benchmark/benchmark_abstract.h"
 
 namespace dlib
 {

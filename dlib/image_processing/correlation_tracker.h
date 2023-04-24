@@ -5,11 +5,12 @@
 
 #include "correlation_tracker_abstract.h"
 #include "../geometry.h"
+#include "../benchmark/benchmark.h"
 #include "../matrix.h"
 #include "../array2d.h"
 #include "../image_transforms/assign_image.h"
 #include "../image_transforms/interpolation.h"
-
+#include <iostream>
 
 namespace dlib
 {
@@ -179,8 +180,12 @@ namespace dlib
             const drectangle& guess
         )
         {
+            time.start();
             double psr = update_noscale(img, guess);
+            time.end();
+            std::cout << "Transition est time: " << time.get_sec() << "seconds \n";
 
+            time.start();
             // Now predict the scale change
             make_scale_space(img, Fs);
             for (unsigned long i = 0; i < Fs.size(); ++i)
@@ -206,6 +211,8 @@ namespace dlib
                 Bs += get_nu_scale()*(squared(real(Fs[i]))+squared(imag(Fs[i])));
             }
 
+            time.end();
+            std::cout << "Scale est time: " << time.get_sec() << "seconds \n";
 
             return psr;
         }
@@ -389,6 +396,7 @@ namespace dlib
         matrix<std::complex<double> > G;
         matrix<std::complex<double>,0,1> Gs;
 
+        benchmark time;
         unsigned long filter_size;
         unsigned long num_scale_levels;
         unsigned long scale_window_size;
